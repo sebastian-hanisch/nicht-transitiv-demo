@@ -1,5 +1,7 @@
 # Nicht-Transitivität: wenn A B schlägt, B C und C wieder A – Streamlit-Demo
 
+**[→ Demo live ausprobieren](https://sebastianhanisch-nicht-transitiv-demo.streamlit.app/)**
+
 Elftes Stück der **Ranking-Linie** (Konzepte-Demo; Forschungsmarke für die Nash-Mittelung), Nachfolger von `bradley-terry-demo` und `massey-colley-demo`: Eine Rangliste setzt voraus,
 dass Stärke eine einzige Skala ist. Spielstile brechen das (Stein-Schere-Papier). Gemessen wird, **wann Zyklen die Vorhersage einzelner Partien und wann die Rangfolge zerstören**, was ein
 **Modell mit einem Zyklus** bringt und kostet, wie schwer sich Zyklen aus Daten sehen lassen (**Rauschen erzeugt selbst Zyklen**) und was die **Nash-Mittelung** leistet. Das Vehikel ist
@@ -136,4 +138,4 @@ Gebaut mit Streamlit, Plotly, numpy, pandas und fpdf2.
 
 ---
 
-Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zu den Demos: [Interaktive Demos](https://sebastianhanisch.net/demos.html).
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Ranking: von der Siegtabelle bis Learning to Rank](https://sebastianhanisch.net/konzepte-ranking.html).
