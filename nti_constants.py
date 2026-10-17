@@ -25,6 +25,7 @@ C_UNBALANCED = (0.0, 0.2, 0.4)
 C_RANK = (0.0, 0.2, 0.4)
 C_DETECT = (0.0, 0.2, 0.4)
 BASELINE_DRAWS = 12
+BASELINE_LAM = 0.3                          # Ridge der Anpassung für die Rauschgrundlinie: bei reinem Rauschen trifft sie den Datenwert bei 1, 4 und 16 Partien je Paar (mit 1e-3 zu niedrig)
 EXP_LAM = 0.3
 
 COLOR_BT = "#9aa0a6"

@@ -35,8 +35,9 @@ insgesamt (Kendall τ gegen die Stärke) wird nicht besser (0,73 gegen 0,75 bei 
 
 - **Experimente** über 60 feste Läufe (`SWEEP_SEEDS`, nie ein einzelner Seed), je mit einem live berechneten Verdikt; feste Instanz mit 12 Spielern, Stärkeabstand 0,3, vollständigem Plan,
   Ridge des Zyklenmodells 0,3, unabhängig vom Regler.
-- **Zwei Ziele, zwei Maße:** Vorhersage und Rangfolge werden mit getrennten Maßen gemessen; Zyklenanteil und zyklische Dreiergruppen mit Rauschgrundlinie. Die Grundlinie ist bei einer Partie je Paar zu niedrig
-  (0,48 statt 0,57 bei reinem Rauschen, eigene Läufe); ab 4 Partien je Paar stimmt sie.
+- **Zwei Ziele, zwei Maße:** Vorhersage und Rangfolge werden mit getrennten Maßen gemessen; Zyklenanteil und zyklische Dreiergruppen mit Rauschgrundlinie. Die Grundlinie zieht aus dem angepassten transitiven Modell mit Ridge 0,3
+  (`BASELINE_LAM`) und trifft bei reinem Rauschen den Datenwert bei 1, 4, 16 und 64 Partien je Paar (0,563 / 0,303 / 0,130 / 0,042 gegen 0,571 / 0,306 / 0,128 / 0,041); mit der
+  schwachen Ridge 0,001 des Bradley-Terry-Modells lag sie bei einer Partie je Paar zu niedrig (0,48 statt 0,57).
 - **Zufall:** `turnier_generator.py` mit SplitMix64-Strom (wortgleich mit den Repos der Linie); Zufallsstarts des Zyklenmodells aus demselben Strom.
 
 ## Befunde (gemessen, keine Behauptungen)
@@ -52,7 +53,7 @@ Alle Zahlen: 60 feste Läufe, 12 Spieler, δ = 0,3, vollständiger Plan.
 | τ zwischen „ganzes Feld“ und „obere Hälfte“ | 0,91 (konter, c = 0,2), 0,95 (c = 0,4), 0,97 (ausgewogen, c = 0,4): die Rangfolge hängt am Feld, für einige Paare, nicht insgesamt. | `test_the_expected_win_rate_depends_on_the_field` |
 | Zyklenanteil aus Daten ohne jeden Zyklus (c = 0), k = 1 / 4 / 16 / 64 | **0,57 / 0,31 / 0,13 / 0,04** (reines Rauschen). | `test_noise_alone_fills_the_matrix_with_cycles` |
 | Zyklenanteil, konter, c = 0,4, k = 64 | aus Daten **0,075** gegen Grundlinie **0,041**, wahr 0,042; bei k = 16 liegt der Unterschied zur Grundlinie unter 0,01. | `test_the_cycle_signal_exceeds_the_baseline_only_with_many_games` |
-| Zyklische Dreiergruppen | c = 0, k = 1: 13,2 % gegen Grundlinie 9,2 %; c = 0,4, k = 64: mehr als das Dreifache der Grundlinie. | `test_cyclic_triples_follow_the_same_picture` |
+| Zyklische Dreiergruppen | c = 0, k = 1: 13,2 % gegen Grundlinie 12,8 % (reines Rauschen); c = 0,4, k = 64: mehr als das Dreifache der Grundlinie. | `test_cyclic_triples_follow_the_same_picture` |
 | Preis des Zyklenmodells (c = 0, ausgewogen), k = 1 / 4 | BT 0,700 / 0,532 gegen **Zyklus 0,827 / 0,594** und gesättigt 0,653 / 0,588. | `test_the_cycle_model_costs_more_than_it_brings_with_few_games` |
 | Nash-Mittelung, konter, c = 0,2 / 0,4 | Platz des Besten **2,47 / 5,05** gegen 3,25 / 5,85 nach der Siegquote; Gleichgewicht stützt sich auf 1,0 Spieler. | `test_nash_average_helps_only_partially` |
 

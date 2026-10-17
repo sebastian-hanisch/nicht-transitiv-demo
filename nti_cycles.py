@@ -4,6 +4,7 @@ derselben Maße auf Partien, die aus dem angepassten transitiven Modell gezogen 
 
 import numpy as np
 
+import nti_constants as C
 import nti_models as M
 import turnier_generator as T
 
@@ -47,7 +48,7 @@ def triple_share(W: np.ndarray, G: np.ndarray) -> float:
 def noise_baseline(W: np.ndarray, G: np.ndarray, draws: int = 12, seed: int = 0) -> dict:
     """Mittel von Zyklenanteil und Anteil zyklischer Dreiergruppen auf Partien, die aus dem angepassten Bradley-Terry-Modell gezogen sind (gleiche Partienmatrix)."""
     n = len(W)
-    s = M.fit_bt(W, G)
+    s = M.fit_bt(W, G, lam=C.BASELINE_LAM)
     P = M.sigmoid(M.logit_matrix(s))
     rng = T.SplitMix64(0xB45E ^ int(seed))
     shares, triples = [], []

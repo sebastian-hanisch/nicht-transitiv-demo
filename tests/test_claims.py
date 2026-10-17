@@ -91,8 +91,16 @@ def test_the_cycle_signal_exceeds_the_baseline_only_with_many_games(detect):
     assert detect[(0.4, 16)]["data"] - detect[(0.4, 16)]["baseline"] < 0.01
 
 
+def test_the_baseline_matches_pure_noise_at_every_number_of_games(detect):
+    """Ohne Zyklus in der Wahrheit (c = 0) muss die Rauschgrundlinie den Datenwert treffen, auch bei einer Partie je Paar (Ridge 1e-3 lag dort bei 0,48 gegen 0,57)."""
+    for k in (1, 4, 16, 64):
+        r = detect[(0.0, k)]
+        assert abs(r["data"] - r["baseline"]) < 0.02 + 0.03 * r["data"], (k, r["data"], r["baseline"])
+        assert abs(r["triples"] - r["triples_baseline"]) < 0.01 + 0.1 * r["triples"], (k, r["triples"], r["triples_baseline"])
+
+
 def test_cyclic_triples_follow_the_same_picture(detect):
-    assert detect[(0.0, 1)]["triples"] == pytest.approx(0.132, abs=0.012) and detect[(0.0, 1)]["triples_baseline"] == pytest.approx(0.092, abs=0.012)
+    assert detect[(0.0, 1)]["triples"] == pytest.approx(0.132, abs=0.012) and detect[(0.0, 1)]["triples_baseline"] == pytest.approx(0.128, abs=0.012)
     assert detect[(0.4, 64)]["triples"] > 3 * detect[(0.4, 64)]["triples_baseline"]
 
 

@@ -93,8 +93,6 @@ def verdict_analysis(a: Analysis):
             f"(wahr: {de(a.share_true)}).")
     if a.share_data < a.baseline["share"] * 1.15 + 0.01:
         text += " **Die Daten unterscheiden die Zyklen nicht vom Rauschen.**"
-    if s.games == 1:
-        text += " Bei einer Partie je Paar liegt die Rauschgrundlinie zu niedrig (0,48 statt 0,57 bei reinem Rauschen): Ein Wert über der Grundlinie belegt dort noch keine Zyklen."
     return "info", text
 
 
@@ -226,7 +224,7 @@ def verdict_detect(rows):
     one = at(C.C_DETECT[0], 1)
     return "warning", (f"Zyklen sind schwer zu sehen: Bei einer Partie je Paar liegt der aus Daten gemessene Zyklenanteil ohne jeden Zyklus (c = 0) bei {de(one['data'])}; bei "
                        f"{C.GAMES_GRID[-1]} Partien sinkt dieses Rauschen auf {de(zero['data'], 3)}, und für c = {de(C.C_DETECT[-1], 1)} liegt der Wert bei {de(strong['data'], 3)} "
-                       f"(Grundlinie {de(strong['baseline'], 3)}, wahr {de(strong['true'], 3)}). Ohne die Grundlinie wirkte schon reines Rauschen „voller Zyklen“. Bei einer Partie je Paar liegt die Grundlinie zu niedrig.")
+                       f"(Grundlinie {de(strong['baseline'], 3)}, wahr {de(strong['true'], 3)}). Ohne die Grundlinie wirkte schon reines Rauschen „voller Zyklen“.")
 
 
 def verdict_price(rows_bal):
