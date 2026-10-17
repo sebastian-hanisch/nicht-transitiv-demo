@@ -225,8 +225,8 @@ st.markdown(
 | **Der Zyklus ist ein Stilzyklus** | Der Generator erzeugt Zyklen aus drei Stilen mit begrenztem Aufschlag; echte Nicht-Transitivität (Strategien, Ligen) kann stärker und anders gebaut sein. | – |
 | **Ein Zyklus genügt** | Das Modell hat eine Rotationsebene; mehrere unabhängige Zyklen würden mehr Ebenen brauchen (hier nicht gemessen). | – |
 | **Vollständiger Plan** | Mit Lücken im Spielplan ist der Zyklenanteil noch schwerer zu sehen, und die Tabelle misst das Feld (Stück Massey und Colley). | Massey und Colley |
-| **Die Rangfolge ist feldunabhängig** | Mit Zyklen gibt es nur eine Rangfolge je Feld; die erwartete Siegquote gegen das ganze Feld ist eine Wahl (Experiment 3). | – |
-| **Das Zyklenmodell überpasst nicht** | Bei wenigen Partien passt es das Rauschen an und liegt hinter Bradley-Terry (Experiment 5). | – |
+| **Die Rangfolge ist feldunabhängig** | Mit Zyklen hängt die Rangfolge am Feld (τ zwischen ganzem Feld und oberer Hälfte 0,91 bis 0,97): Sie ändert sich für einige Paare, nicht insgesamt; die erwartete Siegquote gegen das ganze Feld ist eine Wahl (Experiment 3). | – |
+| **Das Zyklenmodell überpasst nicht** | Ohne Zyklus in der Wahrheit passt es bei wenigen Partien das Rauschen an und liegt hinter Bradley-Terry (Experiment 5). | – |
 | **Die Nash-Mittelung ist eindeutig** | Das Gleichgewicht ist im Allgemeinen nicht eindeutig; der Löser liefert eines, das Ergebnis hängt an dieser Wahl (Experiment 6). Das Papier von Balduzzi et al. nimmt das Maxent-Gleichgewicht der logit-Matrix, die Demo die Auszahlung P − ½ und irgendein Gleichgewicht. | – |
 | **Es zählt der Ausgang** | Stärke des Siegs, Remis und Heimvorteil gehören nicht zum Modell. | Tore, Remis, Heimvorteil |
 | **Alles ist simuliert** | Stärken und Stile sind Konstruktionen des Generators; die Aussagen gelten für diese Konstruktion. | – |

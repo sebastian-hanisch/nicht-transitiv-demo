@@ -93,6 +93,8 @@ def verdict_analysis(a: Analysis):
             f"(wahr: {de(a.share_true)}).")
     if a.share_data < a.baseline["share"] * 1.15 + 0.01:
         text += " **Die Daten unterscheiden die Zyklen nicht vom Rauschen.**"
+    if s.games == 1:
+        text += " Bei einer Partie je Paar liegt die Rauschgrundlinie zu niedrig (0,48 statt 0,57 bei reinem Rauschen): Ein Wert über der Grundlinie belegt dort noch keine Zyklen."
     return "info", text
 
 
@@ -214,7 +216,7 @@ def verdict_rank(rows):
     return "warning", (f"Bei unausgewogenen Stilen liegt der wahre Beste nach der erwarteten Siegquote auf Platz **{de(lo['place'], 1)}** (c = {de(C.C_RANK[1], 1)}) bzw. "
                        f"**{de(hi['place'], 1)}** (c = {de(C.C_RANK[2], 1)}), τ gegen die Stärke {de(lo['tau_s'])} bzw. {de(hi['tau_s'])}; bei ausgewogenen Stilen bleibt er auf "
                        f"Platz {de(bal['place'], 0)}. Die Rangfolge nach der Siegquote hängt am Feld (τ zwischen „alle“ und „obere Hälfte“ {de(hi['tau_field'])}): Es gibt keine "
-                       "feldunabhängige Rangfolge, nur eine je Feld.")
+                       "feldunabhängige Rangfolge; sie ändert sich für einige Paare, nicht insgesamt.")
 
 
 def verdict_detect(rows):
@@ -224,19 +226,19 @@ def verdict_detect(rows):
     one = at(C.C_DETECT[0], 1)
     return "warning", (f"Zyklen sind schwer zu sehen: Bei einer Partie je Paar liegt der aus Daten gemessene Zyklenanteil ohne jeden Zyklus (c = 0) bei {de(one['data'])}; bei "
                        f"{C.GAMES_GRID[-1]} Partien sinkt dieses Rauschen auf {de(zero['data'], 3)}, und für c = {de(C.C_DETECT[-1], 1)} liegt der Wert bei {de(strong['data'], 3)} "
-                       f"(Grundlinie {de(strong['baseline'], 3)}, wahr {de(strong['true'], 3)}). Ohne die Grundlinie wäre jeder Datensatz „voller Zyklen“.")
+                       f"(Grundlinie {de(strong['baseline'], 3)}, wahr {de(strong['true'], 3)}). Ohne die Grundlinie wirkte schon reines Rauschen „voller Zyklen“. Bei einer Partie je Paar liegt die Grundlinie zu niedrig.")
 
 
 def verdict_price(rows_bal):
     r0, r1 = _loss_row(rows_bal, C.C_BALANCED[0], 1), _loss_row(rows_bal, C.C_BALANCED[0], 4)
-    return "warning", (f"Das Zyklenmodell kostet bei wenigen Partien mehr, als es bringt: Ohne Zyklus in der Wahrheit (c = 0) liegt sein Log-Verlust bei einer Partie je Paar bei "
+    return "warning", (f"Ohne Zyklus in der Wahrheit kostet das Zyklenmodell bei wenigen Partien mehr, als es bringt: Bei c = 0 liegt sein Log-Verlust bei einer Partie je Paar bei "
                        f"**{de(r0['loss']['BT + Zyklus'], 3)} gegen {de(r0['loss']['Bradley-Terry'], 3)}** bei Bradley-Terry, bei 4 Partien {de(r1['loss']['BT + Zyklus'], 3)} gegen "
-                       f"{de(r1['loss']['Bradley-Terry'], 3)}. Es passt das Rauschen an; erst mit vielen Partien je Paar lohnt der Zyklus.")
+                       f"{de(r1['loss']['Bradley-Terry'], 3)}. Es passt das Rauschen an; bei starken ausgewogenen Zyklen lohnt es sich dagegen schon bei einer bis vier Partien je Paar.")
 
 
 def verdict_nash(rows):
     lo, hi = rows[0], rows[-1]
     return "info", (f"Nash-Mittelung (Forschungsmarke, kein etablierter Standard): Der wahre Beste liegt nach der erwarteten Siegquote auf Platz {de(lo['place_e'], 1)} / "
                     f"{de(hi['place_e'], 1)}, nach der Nash-Wertung auf Platz **{de(lo['place_nash'], 1)} / {de(hi['place_nash'], 1)}** (c = {de(lo['c'], 1)} / {de(hi['c'], 1)}); "
-                    f"das Gleichgewicht stützt sich im Mittel auf {de(lo['support'], 1)} / {de(hi['support'], 1)} Spieler. Es hilft nur teilweise: Wer gekontert wird, hat auch im "
-                    "Gleichgewicht keinen Platz.")
+                    f"das Gleichgewicht stützt sich im Mittel auf {de(lo['support'], 1)} / {de(hi['support'], 1)} Spieler. Es verbessert den Platz des Besten nur um {de(lo['place_e'] - lo['place_nash'], 1)} / {de(hi['place_e'] - hi['place_nash'], 1)} Plätze und stellt die Rangfolge insgesamt nicht her: "
+                    "Wer gekontert wird, hat auch im Gleichgewicht keinen Platz.")

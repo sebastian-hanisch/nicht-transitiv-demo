@@ -9,13 +9,14 @@ das neutrale, simulierte Turnier der Wurzel (Stärken und Stilzyklus aus dem Gen
 
 ## Kernfrage
 
-Wann zerstören Zyklen eine Rangliste? **Zwei Dinge sind zu trennen.** Bei **ausgewogenen** Stilen (4/4/4) und Zyklenstärke c = 0,4 bleibt die Rangfolge unberührt (der Beste auf Platz 1), aber
+Wann zerstören Zyklen eine Rangliste? **Zwei Dinge sind zu trennen.** Bei **ausgewogenen** Stilen (4/4/4) und Zyklenstärke c = 0,4 bleibt die Rangfolge nach der erwarteten Siegquote unberührt (der Beste auf Platz 1, τ gleich 1; bei stärkeren Zyklen sinkt τ, bei c = 0,8 und 1,2 auf rund 0,93, eigene Läufe außerhalb der Testsuite), aber
 **Bradley-Terry sagt einzelne Partien schlecht voraus:** Log-Verlust 0,602 bei 16 Partien je Paar, ein Modell mit **einem** Zyklus kommt auf 0,405 (gesättigte Matrix 0,404, Untergrenze 0,381).
-Bei **unausgewogenen** Stilen (der Beste hat den Stil, den die meisten kontern) ist es umgekehrt: Die Vorhersage leidet kaum (0,485 gegen 0,477 der Untergrenze bei 64 Partien), aber der
+Bei **unausgewogenen** Stilen (der Beste hat den Stil, den acht der elf anderen kontern) ist es umgekehrt: Die Vorhersage leidet kaum (0,485 gegen 0,477 der Untergrenze bei 64 Partien), aber der
 wahre Beste liegt nach der erwarteten Siegquote auf Platz **3,2** (c = 0,2) bzw. **5,8** (c = 0,4), τ gegen die Stärke 0,75 bzw. 0,53. **Zyklen sind schwer zu sehen:** Aus Daten gemessen liegt
 der Anteil der logit-Matrix, den keine Rangstärke erklärt, ohne jeden Zyklus bei einer Partie je Paar bei 0,57 und bei 64 Partien noch bei 0,041, gegen 0,075 für c = 0,4 (wahr 0,042).
-Das Zyklenmodell **kostet bei wenigen Partien mehr, als es bringt** (0,827 gegen 0,700 bei einer Partie je Paar, ohne Zyklus in der Wahrheit). Die Nash-Mittelung stellt die Rangfolge
-nur teilweise her (Platz 3,2 → 2,5 und 5,8 → 5,0).
+Ohne Zyklus in der Wahrheit **kostet das Zyklenmodell bei wenigen Partien mehr, als es bringt** (0,827 gegen 0,700 bei einer Partie je Paar); bei starken ausgewogenen Zyklen lohnt es sich schon bei einer bis vier Partien je Paar
+(c = 0,4: 0,590 gegen 0,665 bzw. 0,455 gegen 0,611, eigene Läufe außerhalb der Testsuite). Die Nash-Mittelung verbessert den Platz des Besten nur um knapp einen Platz (3,25 → 2,47 und 5,85 → 5,05); die Rangfolge
+insgesamt (Kendall τ gegen die Stärke) wird nicht besser (0,73 gegen 0,75 bei c = 0,2, 0,54 gegen 0,53 bei c = 0,4, eigene Läufe außerhalb der Testsuite).
 
 ## Modell
 
@@ -34,7 +35,8 @@ nur teilweise her (Platz 3,2 → 2,5 und 5,8 → 5,0).
 
 - **Experimente** über 60 feste Läufe (`SWEEP_SEEDS`, nie ein einzelner Seed), je mit einem live berechneten Verdikt; feste Instanz mit 12 Spielern, Stärkeabstand 0,3, vollständigem Plan,
   Ridge des Zyklenmodells 0,3, unabhängig vom Regler.
-- **Zwei Ziele, zwei Maße:** Vorhersage und Rangfolge werden nie mit einem Maß gemessen; Zyklenanteil und zyklische Dreiergruppen immer mit Rauschgrundlinie.
+- **Zwei Ziele, zwei Maße:** Vorhersage und Rangfolge werden mit getrennten Maßen gemessen; Zyklenanteil und zyklische Dreiergruppen mit Rauschgrundlinie. Die Grundlinie ist bei einer Partie je Paar zu niedrig
+  (0,48 statt 0,57 bei reinem Rauschen, eigene Läufe); ab 4 Partien je Paar stimmt sie.
 - **Zufall:** `turnier_generator.py` mit SplitMix64-Strom (wortgleich mit den Repos der Linie); Zufallsstarts des Zyklenmodells aus demselben Strom.
 
 ## Befunde (gemessen, keine Behauptungen)
@@ -47,7 +49,7 @@ Alle Zahlen: 60 feste Läufe, 12 Spieler, δ = 0,3, vollständiger Plan.
 | Zyklenmodell gegen gesättigt bei 64 Partien | Unterschied unter 0,01 (c = 0,4 und 0,8): ein Zyklus genügt. | `test_the_cycle_model_is_close_to_the_saturated_matrix_with_enough_games` |
 | Vorhersage, unausgewogen (konter), c = 0,4, 64 Partien | BT **0,485**, Zyklus 0,483, Untergrenze 0,477; bei c = 0,2: BT 0,520. | `test_with_unbalanced_styles_prediction_barely_suffers` |
 | Platz des wahren Besten nach der erwarteten Siegquote, konter, c = 0 / 0,2 / 0,4 | **1,0 / 3,25 / 5,85**, τ gegen die Stärke 1,0 / 0,75 / 0,53; ausgewogen: Platz 1,0, τ 1,0; beute c = 0,4: Platz 1,07. | `test_unbalanced_styles_push_the_best_down_the_table` |
-| τ zwischen „ganzes Feld“ und „obere Hälfte“ | 0,91 (konter, c = 0,2), 0,95 (c = 0,4), 0,97 (ausgewogen, c = 0,4): die Rangfolge hängt am Feld. | `test_the_expected_win_rate_depends_on_the_field` |
+| τ zwischen „ganzes Feld“ und „obere Hälfte“ | 0,91 (konter, c = 0,2), 0,95 (c = 0,4), 0,97 (ausgewogen, c = 0,4): die Rangfolge hängt am Feld, für einige Paare, nicht insgesamt. | `test_the_expected_win_rate_depends_on_the_field` |
 | Zyklenanteil aus Daten ohne jeden Zyklus (c = 0), k = 1 / 4 / 16 / 64 | **0,57 / 0,31 / 0,13 / 0,04** (reines Rauschen). | `test_noise_alone_fills_the_matrix_with_cycles` |
 | Zyklenanteil, konter, c = 0,4, k = 64 | aus Daten **0,075** gegen Grundlinie **0,041**, wahr 0,042; bei k = 16 liegt der Unterschied zur Grundlinie unter 0,01. | `test_the_cycle_signal_exceeds_the_baseline_only_with_many_games` |
 | Zyklische Dreiergruppen | c = 0, k = 1: 13,2 % gegen Grundlinie 9,2 %; c = 0,4, k = 64: mehr als das Dreifache der Grundlinie. | `test_cyclic_triples_follow_the_same_picture` |
@@ -60,7 +62,7 @@ Alle Zahlen: 60 feste Läufe, 12 Spieler, δ = 0,3, vollständiger Plan.
   **0,041**): 60 statt 30 Läufe, eigener Löser (BFGS) statt scipy, zwei statt drei Zufallsstarts.
 - **Die Nash-Mittelung hilft hier etwas mehr bei c = 0,2, weniger bei c = 0,4 als in der Vorab-Messung** (2,5 / 5,0 gegen 3,2 / 4,7), und der Träger ist ein einzelner Spieler: In allen
   60 Instanzen gibt es einen Spieler, gegen den kein anderer eine Siegwahrscheinlichkeit über ½ hat (`test_the_equilibrium_is_the_one_player_nobody_beats_in_expectation`); das Gleichgewicht ist **nicht eindeutig**, der Löser (Exponentialgewichte mit Mittelung) liefert eines, ein
-  Simplex-Löser ein anderes (Träger 4,2 / 3,3 in der Vorab-Messung). Die Aussage „hilft nur teilweise“ trägt, die Zahl hängt an der Wahl des Gleichgewichts.
+  Simplex-Löser ein anderes (Träger 4,2 / 3,3 in der Vorab-Messung). Die Aussage „hilft nur wenig“ trägt, die Zahl hängt an der Wahl des Gleichgewichts.
 - **Das Modell mit mehreren Zyklen ist nicht umgesetzt** (nur eine Rotationsebene), ebenso alpha-Rank; beides steht nur beim Namen.
 - **Zwei Löser statt scipy:** Zur Laufzeit gibt es nur numpy; scipy dient nur als Orakel in den Tests.
 
@@ -75,7 +77,7 @@ Alle Zahlen: 60 feste Läufe, 12 Spieler, δ = 0,3, vollständiger Plan.
 - **Der Zyklus des Generators ist eine Konstruktion** (drei Stile, Aufschlag auf [0,02; 0,98] begrenzt); echte Nicht-Transitivität kann stärker und anders gebaut sein.
 - **Ein Zyklus genügt hier;** mehrere unabhängige Zyklen sind nicht gemessen.
 - **Vollständiger Plan:** Bei Lücken im Spielplan ist der Zyklenanteil schwerer zu sehen; nicht gemessen.
-- **Die erwartete Siegquote ist eine Wahl:** gegen ein gleichverteiltes Feld; mit Zyklen hängt die Rangfolge am Feld.
+- **Die erwartete Siegquote ist eine Wahl:** gegen ein gleichverteiltes Feld; mit Zyklen hängt die Rangfolge am Feld (τ zwischen ganzem Feld und oberer Hälfte 0,91 bis 0,97): sie ändert sich für einige Paare, nicht insgesamt.
 - **Nash-Mittelung:** Gleichgewicht nicht eindeutig; 12 Spieler; Forschungsmarke, kein etablierter Standard.
 - **Die Nash-Mittelung weicht von der Quelle ab:** Balduzzi et al. (2018) definieren sie auf der logit-Matrix mit dem Maxent-Gleichgewicht (Satz 4); die Demo nimmt das symmetrische Nullsummenspiel
   mit der Auszahlung P − ½ und irgendein Gleichgewicht. Die Beispiele 1 und 2 des Papiers sind in den Tests mit P = σ(A) bzw. 0,5 + 0,2 (C + εT) nachgerechnet, nicht mit der logit-Matrix.
@@ -95,7 +97,7 @@ Alle Zahlen: 60 feste Läufe, 12 Spieler, δ = 0,3, vollständiger Plan.
 
 ## Tests
 
-95 Tests, gut zwei Minuten (die Experimente rechnen über 60 feste Läufe): Einheiten gegen Handwerte (`test_models.py`: Bradley-Terry, Zyklenmodell mit Gradient gegen finite Differenzen,
+458 Tests, rund sieben Minuten (auf dem Entwicklungsrechner gemessen; die Experimente rechnen über 60 feste Läufe): Einheiten gegen Handwerte (`test_models.py`: Bradley-Terry, Zyklenmodell mit Gradient gegen finite Differenzen,
 BFGS, gesättigte Matrix, Log-Verlust, Entropie; `test_cycles_nash.py`: Zyklenanteil, zyklische Dreiergruppen gegen Aufzählen, Rauschgrundlinie, Nash-Mittelung), Generator
 (`test_generator.py`, wortgleich), **Orakel** (`test_oracle_nicht_transitiv.py`: Bradley-Terry und Zyklenmodell gegen den BFGS von scipy (die Rotation der Ebene (u, v) ist nur bis auf
 eine Drehung bestimmt, verglichen wird die logit-Matrix); Zyklenanteil gegen eine unabhängige Kleinste-Quadrate-Rechnung über die Paardifferenzen; Nash-Mittelung gegen `scipy.linprog`
