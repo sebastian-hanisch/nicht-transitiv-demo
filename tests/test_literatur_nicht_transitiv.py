@@ -13,6 +13,9 @@ geladen und mit pdftotext gelesen). Kein Wert stammt aus dem Code der Demo.
    - S. 4, Satz 3: (i) Stammen die Wahrscheinlichkeiten aus Elo-Wertungen r (Σ r = 0), so ist div(logit P) = r (Zeilenmittel); (ii) es gibt eine Elo-Wertung, die P erzeugt, genau dann, wenn
      curl(logit P) = 0, d. h. log(p_ij/p_ji) + log(p_jk/p_kj) + log(p_ki/p_ik) = 0 für alle i, j, k.
    - S. 3 (Abschnitt 2.1): p̂_ij = σ(α(r_i − r_j)) mit α = ln(10)/400.
+   - S. 4 (Abschnitt 3.1, mElo_2k): p̂_ij = σ(r_i − r_j + c_i Ω_{2k×2k} c_j) mit c_i ∈ R^{2k} und Ω = Σ_{l=1..k} (e_{2l−1} e_{2l}ᵀ − e_{2l} e_{2l−1}ᵀ); die Demo rechnet k = 1.
+   - Abschnitt 4.1 (S. 6): Das Papier definiert die Nash-Mittelung auf der logit-Matrix A mit dem Maxent-Gleichgewicht (Satz 4); die Demo nimmt die Auszahlung P − ½ und irgendein Gleichgewicht
+     (nti_nash.py); die Tests rechnen die Beispiele 1 und 2 daher mit P = σ(A) bzw. P = 0,5 + 0,2 (C + εT) nach, nicht mit der logit-Matrix der Quelle.
 2. Jiang, Lim, Yao, Ye (2011): „Statistical ranking and combinatorial Hodge theory“, Math. Programming 127, 203–244; eingesehen als arXiv:0811.1067v2 (Seitenzählung der arXiv-PDF):
    - S. 21/22, Satz 5.1: (i) Normalgleichung Δ₀ s = −div Ȳ der Kleinste-Quadrate-Anpassung; (ii) das Residuum R = Ȳ − grad s ist divergenzfrei (div R = 0).
    - S. 22, Gleichung (26): Bei vollständigem Graphen und ungewichtetem Skalarprodukt ist die Minimum-Norm-Lösung s_i = −(1/n) div(Ȳ)(i) = −(1/n) Σ_j Ȳ_ij mit Σ s_i = 0 (Borda-Zählung).
@@ -203,3 +206,20 @@ def test_jiang_cyclicity_ratio_equals_the_cycle_share(k):
     iu = np.triu_indices(n, 1)                                                # Normen über die Kanten (i < j)
     cp = float((R[iu] ** 2).sum() / (A[iu] ** 2).sum())
     assert Y.cycle_share(A) == pytest.approx(cp, abs=1e-12)
+
+
+# --- Balduzzi et al. 2018, Abschnitt 3.1: mElo_2 -------------------------------------------------------------------------------------------------
+
+@pytest.mark.parametrize("k", range(10))
+def test_balduzzi_melo2_prediction_is_the_cycle_logit_of_the_demo(k):
+    """mElo_2: r_i − r_j + c_i Ω c_j mit c_i = (u_i, v_i) und Ω = e₁e₂ᵀ − e₂e₁ᵀ; das ist r_i − r_j + u_i v_j − v_i u_j (antisymmetrisch, wie P(i schlägt j) + P(j schlägt i) = 1 verlangt)."""
+    rng = np.random.default_rng(1600 + k)
+    n = int(rng.integers(3, 9))
+    r, u, v = rng.normal(0, 1, n), rng.normal(0, 1, n), rng.normal(0, 1, n)
+    omega = np.array([[0.0, 1.0], [-1.0, 0.0]])
+    c = np.stack([u, v], axis=1)
+    paper = r[:, None] - r[None, :] + c @ omega @ c.T
+    L = M.cycle_logit_matrix(r, u, v)
+    assert L == pytest.approx(paper, abs=1e-12)
+    assert L == pytest.approx(-L.T, abs=1e-12)
+    assert sig(L) + sig(L).T == pytest.approx(np.ones((n, n)), abs=1e-12)

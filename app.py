@@ -227,7 +227,7 @@ st.markdown(
 | **Vollständiger Plan** | Mit Lücken im Spielplan ist der Zyklenanteil noch schwerer zu sehen, und die Tabelle misst das Feld (Stück Massey und Colley). | Massey und Colley |
 | **Die Rangfolge ist feldunabhängig** | Mit Zyklen gibt es nur eine Rangfolge je Feld; die erwartete Siegquote gegen das ganze Feld ist eine Wahl (Experiment 3). | – |
 | **Das Zyklenmodell überpasst nicht** | Bei wenigen Partien passt es das Rauschen an und liegt hinter Bradley-Terry (Experiment 5). | – |
-| **Die Nash-Mittelung ist eindeutig** | Das Gleichgewicht ist im Allgemeinen nicht eindeutig; der Löser liefert eines, das Ergebnis hängt an dieser Wahl (Experiment 6). | – |
+| **Die Nash-Mittelung ist eindeutig** | Das Gleichgewicht ist im Allgemeinen nicht eindeutig; der Löser liefert eines, das Ergebnis hängt an dieser Wahl (Experiment 6). Das Papier von Balduzzi et al. nimmt das Maxent-Gleichgewicht der logit-Matrix, die Demo die Auszahlung P − ½ und irgendein Gleichgewicht. | – |
 | **Es zählt der Ausgang** | Stärke des Siegs, Remis und Heimvorteil gehören nicht zum Modell. | Tore, Remis, Heimvorteil |
 | **Alles ist simuliert** | Stärken und Stile sind Konstruktionen des Generators; die Aussagen gelten für diese Konstruktion. | – |
 """
@@ -263,8 +263,11 @@ $p \leftarrow p \cdot \exp(\eta A p)$, normiert, Mittel der Iterierten.
 **Zufall.** SplitMix64-Strom des Generators; Zufallsstarts des Zyklenmodells aus demselben Strom (Box-Muller).
 
 **Literatur.**
-- Balduzzi, D., Tuyls, K., Pérolat, J., Graepel, T. (2018): Re-evaluating evaluation. *Advances in Neural Information Processing Systems 31* (Nash-Mittelung, mElo; nicht eingesehen).
-- Jiang, X., Lim, L.-H., Yao, Y., Ye, Y. (2011): Statistical ranking and combinatorial Hodge theory. *Mathematical Programming* 127, 203–244 (nicht eingesehen).
+- Balduzzi, D., Tuyls, K., Pérolat, J., Graepel, T. (2018): Re-evaluating evaluation. *Advances in Neural Information Processing Systems 31* (Nash-Mittelung, mElo; als arXiv:1806.02643v2 eingesehen: Abschnitt 3.1, Abschnitt 4.1 Beispiele 1 und 2, Sätze 1 und 3). **Abweichung der Demo:** Das Papier
+  definiert die Nash-Mittelung auf der logit-Matrix mit dem Maxent-Gleichgewicht; die Demo nimmt die Auszahlung $P - \tfrac12$ und irgendein Gleichgewicht. Der Wert Elo −63 / +63 in Anhang A
+  des Papiers ist nicht reproduzierbar (die Demo liefert ±71,9 Punkte, das erfüllt Satz 1 derselben Quelle).
+- Jiang, X., Lim, L.-H., Yao, Y., Ye, Y. (2011): Statistical ranking and combinatorial Hodge theory. *Mathematical Programming* 127, 203–244 (als arXiv:0811.1067v2 eingesehen: Satz 5.1,
+  Gleichung (26), Zyklizitätsverhältnis in Abschnitt 8.1).
 - Steele, G. L., Lea, D., Flood, C. H. (2014): Fast splittable pseudorandom number generators. *OOPSLA 2014*, 453–472 (Zufallsstrom des Generators).
         """
     )

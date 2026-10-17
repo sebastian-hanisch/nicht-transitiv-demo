@@ -77,14 +77,19 @@ Alle Zahlen: 60 feste Läufe, 12 Spieler, δ = 0,3, vollständiger Plan.
 - **Vollständiger Plan:** Bei Lücken im Spielplan ist der Zyklenanteil schwerer zu sehen; nicht gemessen.
 - **Die erwartete Siegquote ist eine Wahl:** gegen ein gleichverteiltes Feld; mit Zyklen hängt die Rangfolge am Feld.
 - **Nash-Mittelung:** Gleichgewicht nicht eindeutig; 12 Spieler; Forschungsmarke, kein etablierter Standard.
+- **Die Nash-Mittelung weicht von der Quelle ab:** Balduzzi et al. (2018) definieren sie auf der logit-Matrix mit dem Maxent-Gleichgewicht (Satz 4); die Demo nimmt das symmetrische Nullsummenspiel
+  mit der Auszahlung P − ½ und irgendein Gleichgewicht. Die Beispiele 1 und 2 des Papiers sind in den Tests mit P = σ(A) bzw. 0,5 + 0,2 (C + εT) nachgerechnet, nicht mit der logit-Matrix.
+- **Ein Wert der Quelle ist nicht reproduzierbar:** In Anhang A (S. 12) geben Balduzzi et al. für Elo −63 / +63 / 0 / 0 an; die Bradley-Terry-Anpassung der Demo liefert ±71,9 Punkte, und
+  ±71,9 erfüllt Satz 1 derselben Quelle, ±63 nicht. Der Wert wird nur dokumentiert, nicht gegen ihn getestet; qualitativ stimmt die Aussage (A sinkt, B steigt, C bleibt 0).
 - **Alles simuliert:** keine Aussage über Strategiespiele oder einen Sport.
 
 ## Quellen
 
 - Balduzzi, D., Tuyls, K., Pérolat, J., Graepel, T. (2018): Re-evaluating evaluation. *Advances in Neural Information Processing Systems 31* (Nash-Mittelung, Zyklenmodell mElo;
-  nicht eingesehen).
-- Jiang, X., Lim, L.-H., Yao, Y., Ye, Y. (2011): Statistical ranking and combinatorial Hodge theory. *Mathematical Programming* 127, 203–244 (Zerlegung des Vergleichsgraphen; nicht
-  eingesehen).
+  eingesehen 2026-10-17 als arXiv:1806.02643v2: Abschnitt 3.1 mElo, Abschnitt 4.1 Beispiele 1 und 2, Sätze 1 und 3; die Demo rechnet die Nash-Mittelung mit der Auszahlung P − ½ und ohne
+  die Maxent-Auswahl des Papiers, das mit der logit-Matrix und dem Maxent-Gleichgewicht arbeitet).
+- Jiang, X., Lim, L.-H., Yao, Y., Ye, Y. (2011): Statistical ranking and combinatorial Hodge theory. *Mathematical Programming* 127, 203–244 (Zerlegung des Vergleichsgraphen;
+  eingesehen 2026-10-17 als arXiv:0811.1067v2: Satz 5.1 und Gleichung (26), Zyklizitätsverhältnis in Abschnitt 8.1).
 - Steele, G. L., Lea, D., Flood, C. H. (2014): Fast splittable pseudorandom number generators. *OOPSLA 2014*, 453–472 (Zufallsstrom des Generators).
 - **Nicht herangezogen:** α-Rank (Omidshafiei et al. 2019) und Arbeiten zu Intransitivität in Paarvergleichsdaten (Chen, Joachims 2016); die Zahlen dieser Demo sind Simulation.
 
