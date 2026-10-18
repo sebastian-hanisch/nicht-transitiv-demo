@@ -98,7 +98,7 @@ Alle Zahlen: 60 feste Läufe, 12 Spieler, δ = 0,3, vollständiger Plan.
 
 ## Tests
 
-458 Tests, rund sieben Minuten (auf dem Entwicklungsrechner gemessen; die Experimente rechnen über 60 feste Läufe): Einheiten gegen Handwerte (`test_models.py`: Bradley-Terry, Zyklenmodell mit Gradient gegen finite Differenzen,
+459 Tests, rund sieben Minuten (auf dem Entwicklungsrechner gemessen; die Experimente rechnen über 60 feste Läufe): Einheiten gegen Handwerte (`test_models.py`: Bradley-Terry, Zyklenmodell mit Gradient gegen finite Differenzen,
 BFGS, gesättigte Matrix, Log-Verlust, Entropie; `test_cycles_nash.py`: Zyklenanteil, zyklische Dreiergruppen gegen Aufzählen, Rauschgrundlinie, Nash-Mittelung), Generator
 (`test_generator.py`, wortgleich), **Orakel** (`test_oracle_nicht_transitiv.py`: Bradley-Terry und Zyklenmodell gegen den BFGS von scipy (die Rotation der Ebene (u, v) ist nur bis auf
 eine Drehung bestimmt, verglichen wird die logit-Matrix); Zyklenanteil gegen eine unabhängige Kleinste-Quadrate-Rechnung über die Paardifferenzen; Nash-Mittelung gegen `scipy.linprog`
