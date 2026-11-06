@@ -46,6 +46,6 @@ PRESETS = {
 PRESET_HELP = {
     "Transitiv": "Keine Zyklen: Eine Rangstärke erklärt alles, das Zyklenmodell bringt nichts und überpasst höchstens.",
     "Ausgewogener Zyklus": "Stein-Schere-Papier unter gleich vielen Spielern: Die Rangfolge nach der erwarteten Siegquote bleibt, aber Bradley-Terry sagt einzelne Partien schlecht voraus.",
-    "Der Beste wird gekontert": "Der Beste hat einen Stil, den die meisten anderen kontern: Die Tabelle ist in sich stimmig und doch gegen die Stärke falsch.",
+    "Der Beste wird gekontert": "Der Beste hat einen Stil, den die meisten anderen kontern (ein Handicap für ihn, kein Dreierkreis): Die Tabelle ist in sich stimmig und doch gegen die Stärke falsch.",
     "Wenige Partien": "Eine Partie je Paar: Rauschen erzeugt Zyklen, und die gesättigte Matrix sieht nur das Rauschen.",
 }

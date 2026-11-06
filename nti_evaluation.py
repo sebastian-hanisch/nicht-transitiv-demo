@@ -203,7 +203,7 @@ def verdict_unbalanced(rows):
     r = _loss_row(rows, c, 64)
     return "info", (f"Bei unausgewogenen Stilen (der Beste hat den Stil, den die meisten kontern) liegt der Log-Verlust bei c = {de(c, 1)} und {C.GAMES_GRID[-1]} Partien je Paar bei "
                     f"Bradley-Terry {de(r['loss']['Bradley-Terry'], 3)}, mit Zyklus {de(r['loss']['BT + Zyklus'], 3)}, Untergrenze {de(r['bound'], 3)}: **Die Vorhersage leidet "
-                    "kaum**, die Zyklen betreffen nur wenige Paare. Das Problem liegt in der Rangfolge (Experiment 3).")
+                    "kaum**, der Stileinfluss betrifft nur wenige Paare (ein Handicap für den Besten, kein Dreierkreis). Das Problem liegt in der Rangfolge (Experiment 3).")
 
 
 def verdict_rank(rows):
@@ -211,7 +211,7 @@ def verdict_rank(rows):
         return next(r for r in rows if r["style"] == style and r["c"] == c)
     lo, hi = at("konter", C.C_RANK[1]), at("konter", C.C_RANK[2])
     bal = at("ausgewogen", C.C_RANK[2])
-    return "warning", (f"Bei unausgewogenen Stilen liegt der wahre Beste nach der erwarteten Siegquote auf Platz **{de(lo['place'], 1)}** (c = {de(C.C_RANK[1], 1)}) bzw. "
+    return "warning", (f"Bei unausgewogenen Stilen (ein Handicap für den Besten, kein Zyklus) liegt der wahre Beste nach der erwarteten Siegquote auf Platz **{de(lo['place'], 1)}** (c = {de(C.C_RANK[1], 1)}) bzw. "
                        f"**{de(hi['place'], 1)}** (c = {de(C.C_RANK[2], 1)}), τ gegen die Stärke {de(lo['tau_s'])} bzw. {de(hi['tau_s'])}; bei ausgewogenen Stilen bleibt er auf "
                        f"Platz {de(bal['place'], 0)}. Die Rangfolge nach der Siegquote hängt am Feld (τ zwischen „alle“ und „obere Hälfte“ {de(hi['tau_field'])}): Es gibt keine "
                        "feldunabhängige Rangfolge; sie ändert sich für einige Paare, nicht insgesamt.")
@@ -224,7 +224,7 @@ def verdict_detect(rows):
     one = at(C.C_DETECT[0], 1)
     return "warning", (f"Zyklen sind schwer zu sehen: Bei einer Partie je Paar liegt der aus Daten gemessene Zyklenanteil ohne jeden Zyklus (c = 0) bei {de(one['data'])}; bei "
                        f"{C.GAMES_GRID[-1]} Partien sinkt dieses Rauschen auf {de(zero['data'], 3)}, und für c = {de(C.C_DETECT[-1], 1)} liegt der Wert bei {de(strong['data'], 3)} "
-                       f"(Grundlinie {de(strong['baseline'], 3)}, wahr {de(strong['true'], 3)}). Ohne die Grundlinie wirkte schon reines Rauschen „voller Zyklen“.")
+                       f"(Grundlinie {de(strong['baseline'], 3)}, wahr {de(strong['true'], 3)}). „Wahr“ ist hier der durch keine Rangstärke erklärte Rest, kein Dreierkreis. Ohne die Grundlinie wirkte schon reines Rauschen „voller Zyklen“.")
 
 
 def verdict_price(rows_bal):

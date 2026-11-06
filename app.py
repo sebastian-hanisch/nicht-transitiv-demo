@@ -84,6 +84,19 @@ Weiter unten: sechs **🔬 Experimente** mit Verdikt, **🚧 Wo die Annahmen end
 """
 )
 
+# erklaerseite:einfach:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/nicht-transitiv-erklaert.json, nicht von Hand ändern)
+with st.expander("💬 In einfachen Worten"):
+    st.markdown(
+        """
+Eine Rangliste setzt voraus, dass Stärke eine einzige Skala ist: Wer A schlägt und von B geschlagen wird, steht zwischen den beiden. Spielstile brechen das. Dann kann A den B schlagen, B den C und C wieder den A, wie bei Stein, Schere, Papier.
+
+Die Demo spielt simulierte Turniere durch und trennt zwei Ziele, die man leicht vermischt: die Vorhersage einzelner Partien und die Gesamtreihenfolge. Sie zeigt, wann Zyklen die eine oder die andere zerstören, was ein Modell mit einem Zyklus bringt und kostet und warum sich Zyklen schwer vom Zufall trennen lassen. Alles ist simuliert, es gibt keinen echten Datensatz.
+
+[Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/nicht-transitiv-erklaert.html)
+        """
+    )
+# erklaerseite:einfach:end
+
 with st.expander("Eine Skala, ein Zyklus", expanded=True):
     st.markdown(
         """
@@ -114,7 +127,7 @@ with st.sidebar:
                       help="Stärkedifferenz zweier benachbarter Spieler (logistische Einheiten): die transitive Komponente.")
     games = st.select_slider("Partien je Paar", C.GAMES_CHOICES, key="games_select", help="Wie oft jedes Paar gegeneinander spielt. Wenige Partien: Rauschen erzeugt Zyklen.")
     style = st.selectbox("Stilverteilung", C.STYLES, key="style_select",
-                         help="ausgewogen: gleich viele Spieler je Stil; konter: der Beste hat einen Stil, den die meisten anderen kontern; beute: er hat den Stil, der die meisten schlägt.")
+                         help="ausgewogen: gleich viele Spieler je Stil; konter: der Beste hat einen Stil, den die meisten anderen kontern (Handicap, kein Dreierkreis); beute: er hat den Stil, der die meisten schlägt.")
     c = st.slider("Zyklenstärke c", *bounds("c_slider"), step=C.C_STEP, key="c_slider",
                   help="Aufschlag auf die Siegwahrscheinlichkeit durch den Stilzyklus (0 = transitiv); die Wahrscheinlichkeiten bleiben auf [0,02; 0,98] begrenzt.")
     lam = st.slider("Ridge des Zyklenmodells", *bounds("lam_slider"), step=C.LAM_STEP, key="lam_slider",
@@ -178,7 +191,7 @@ st.dataframe(pd.DataFrame([{"c": ev.de(r["c"], 1), "Partien je Paar": r["k"], **
              hide_index=True, width="stretch")
 
 st.subheader("🔬 Experiment 2: Vorhersage bei unausgewogenen Stilen")
-st.caption("Dieselbe Instanz mit der Stilverteilung „konter“ (der Beste hat einen Stil, den die meisten anderen kontern), c = 0 / 0,2 / 0,4.")
+st.caption("Dieselbe Instanz mit der Stilverteilung „konter“ (der Beste hat einen Stil, den die meisten anderen kontern: ein Handicap für ihn, kein Dreierkreis), c = 0 / 0,2 / 0,4.")
 rows2 = _predict_unbalanced()
 st.plotly_chart(build_predict(rows2), width="stretch", key="exp2_chart")
 verdict(*ev.verdict_unbalanced(rows2))
@@ -194,7 +207,7 @@ st.dataframe(pd.DataFrame([{"Stile": r["style"], "c": ev.de(r["c"], 1), "Platz d
 
 st.subheader("🔬 Experiment 4: Zyklen aus Daten sehen")
 st.caption("Stilverteilung „konter“; Zyklenanteil der logit-Matrix aus den Daten (gesättigtes Modell) gegen die Rauschgrundlinie, die aus dem angepassten transitiven Modell gezogen wird "
-           f"({C.BASELINE_DRAWS} Ziehungen je Instanz), 60 feste Läufe.")
+           f"({C.BASELINE_DRAWS} Ziehungen je Instanz), 60 feste Läufe. „Wahr“ ist hier der durch keine Rangstärke erklärte Rest der Handicap-Struktur: bei „konter“ gibt es keinen wahren Dreierkreis.")
 rows4 = _detect()
 st.plotly_chart(build_detect(rows4), width="stretch", key="exp4_chart")
 verdict(*ev.verdict_detect(rows4))
@@ -207,7 +220,7 @@ st.caption("Aus Experiment 1 (c = 0, ausgewogen, transitive Wahrheit): Log-Verlu
 verdict(*ev.verdict_price(rows1))
 
 st.subheader("🔬 Experiment 6: Nash-Mittelung (Forschungsmarke)")
-st.caption("Stilverteilung „konter“, Wertung aus der wahren Matrix: Gleichgewicht des symmetrischen Nullsummenspiels (Exponentialgewichte mit "
+st.caption("Stilverteilung „konter“ (Handicap-Effekt, kein Zyklus), Wertung aus der wahren Matrix: Gleichgewicht des symmetrischen Nullsummenspiels (Exponentialgewichte mit "
            "Mittelung); Platz des wahren Besten nach der Nash-Wertung gegen die erwartete Siegquote, 60 feste Instanzen. Das Gleichgewicht ist im Allgemeinen nicht eindeutig.")
 rows6 = _nash()
 st.plotly_chart(build_nash(rows6), width="stretch", key="exp6_chart")
@@ -236,6 +249,26 @@ st.markdown(
 st.markdown("---")
 
 with st.expander("📐 Mathematische Formulierung"):
+    # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/nicht-transitiv-erklaert.json, nicht von Hand ändern)
+    st.markdown(
+        r"""
+**Lesehilfe.** Gegeben sind die Siege $W_{ij}$ und die Partienzahlen $G_{ij}$ eines Turniers, in dem jedes Paar gegeneinander spielt. Gesucht ist, wann eine Rangstärke je Spieler die Partien und die Reihenfolge erklärt und wann ein Zyklus nötig ist.
+
+| Symbol | Bedeutung |
+|---|---|
+| $W_{ij}$, $G_{ij}$ | Siege von $i$ gegen $j$ bzw. Zahl ihrer Partien |
+| $P_{ij}$ | wahre Siegwahrscheinlichkeit von $i$ gegen $j$ (die Wahrheit des Generators) |
+| $\sigma$ | logistische Funktion |
+| $L_{ij}$ | Logit-Matrix eines Modells: $P(i \text{ schlägt } j) = \sigma(L_{ij})$ |
+| $s_i$ | Rangstärke von Spieler $i$ |
+| $u_i$, $v_i$ | Koordinaten von $i$ in der Ebene des Zyklenmodells |
+| $c$ | Zyklenstärke: Aufschlag auf die Siegwahrscheinlichkeit durch den Stilzyklus |
+| $A$ | schiefsymmetrischer Teil von $L$, aus dem der Zyklenanteil folgt |
+
+[Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/nicht-transitiv-erklaert.html#fachleute)
+        """
+    )
+    # erklaerseite:lesehilfe:end
     st.markdown(
         r"""
 **Daten.** $W_{ij}$ Siege von $i$ gegen $j$, $G_{ij} = W_{ij} + W_{ji}$ Partien; $P_{ij}$ die wahre Siegwahrscheinlichkeit (Generator: $\sigma(s_i - s_j) + K_{ij}$ mit dem
